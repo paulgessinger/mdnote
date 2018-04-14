@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import moment from 'moment';
+import RaisedButton from 'material-ui/RaisedButton';
 
 import {
   setActiveDay,
@@ -10,7 +11,8 @@ import {
 
 import AppTitle from '../components/AppTitle';
 import DayPicker from 'react-day-picker';
-import "react-day-picker/lib/style.css"
+import "react-day-picker/lib/style.css";
+import "./LogView.css";
 
 
 class LogView extends React.Component {
@@ -55,18 +57,31 @@ class LogView extends React.Component {
   render() {
 
     const day = this.props.active_day;
+    const notes = this.props.notes || {};
+    const create_today = !notes[day.format("YYYY-MM-DD")];
+    //console.log(this.props.notes);
 
     return (
-      <div>
+      <div className="columns">
         <AppTitle title="Log"/>
-        <DayPicker
-          enableOutsideDays
-          selectedDays={day.toDate()}
-          disabledDays={d => this.isDayDisabled(moment(d))}
-          onDayClick={d => this.onSelect(moment(d))}
-        />
+        <div className="left-column">
+          <DayPicker
+            enableOutsideDays
+            selectedDays={day.toDate()}
+            disabledDays={d => this.isDayDisabled(moment(d))}
+            onDayClick={d => this.onSelect(moment(d))}
+          />
+            {create_today ? <RaisedButton 
+              primary={true} 
+              label="Add today" 
+            /> : null}
+        </div>
+        <div className="right-column">
+          {day.format("YYYY-MM-DD")}
+        </div>
 
-        {day.format("YYYY-MM-DD")}
+
+        
 
       </div>
     );

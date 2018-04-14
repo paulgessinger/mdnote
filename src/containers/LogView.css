@@ -1,0 +1,18 @@
+.DayPicker-Day {
+  outline:none;
+}
+
+.columns {
+  display:flex;
+  flex-direction:row;
+}
+
+.left-column {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+.right-column {
+  flex:1;
+}
