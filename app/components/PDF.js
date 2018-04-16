@@ -1,13 +1,12 @@
 import React from 'react';
 
-//import pdfjs from 'pdfjs-dist';
-//import pdfjs from 'pdfjs';
 const electron = window.require('electron');
 const fs = electron.remote.require('fs');
 
+import styles from './PDF.css';
+
 require('pdfjs-dist/build/pdf.combined');
 var pdfjs = window.PDFJS;
-//pdfjs.workerSrc = "node_modules/pdfjs-dist/build/pdf.worker.js";
 
 var lastRender = new Date();
 const fps = 20.;
@@ -146,10 +145,9 @@ export default class PDF extends React.Component {
     }
 
     return (
-      <div className="pdf">
+      <span className={styles.container}>
         <canvas ref="canvas"/>
-        hallo
-      </div>
+      </span>
     );
   }
 

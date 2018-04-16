@@ -1,5 +1,7 @@
 .container {
   display:flex;
+  /*background:blue;*/
+  height: 100vh;
 }
 
 
@@ -11,5 +13,17 @@
 
 .rightColumn {
   flex:1;
+  overflow-y: scroll;
+}
 
+.rightColumn_split {
+  flex: 0 1 auto;
+}
+
+.rightColumn img {
+  max-width:100%;
+}
+
+.editColumn {
+  /*flex:1;*/
 }

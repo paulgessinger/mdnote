@@ -4,17 +4,21 @@ import { connect } from 'react-redux';
 import Home from '../components/Home';
 import { bindActionCreators } from 'redux';
 import * as EntriesActions from '../actions/entries';
+import * as EditActions from '../actions/edit';
 
 type Props = {};
 
 function mapStateToProps(state) {
   return {
-    entries: state.entries
+    entries: state.entries,
+    editor_open: state.edit.editor_open
   };
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators(EntriesActions, dispatch);
+  return Object.assign({},
+    bindActionCreators(EntriesActions, dispatch),
+    bindActionCreators(EditActions, dispatch));
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);
