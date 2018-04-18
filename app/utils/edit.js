@@ -46,4 +46,5 @@ export async function uploadFile(file, entry) {
   await append;
   await copy;
 
+  return relative;
 }

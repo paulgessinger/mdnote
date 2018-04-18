@@ -7,6 +7,7 @@ import styles from './PDF.css';
 
 require('pdfjs-dist/build/pdf.combined');
 var pdfjs = window.PDFJS;
+import {exists} from '../utils/fs';
 
 var lastRender = new Date();
 const fps = 20.;
@@ -34,7 +35,7 @@ function resizeCanvasElement(c) {
   const retw = w / dpr;
 
   const parent = c.parentNode;
-  const pw = parent.offsetWidth;
+  const pw = parent.offsetWidth * 0.8;
   //console.log(pw);
 
   if(retw > pw) {
@@ -72,14 +73,16 @@ export default class PDF extends React.Component {
     };
   }
 
-  _loadPDFData(path) {
+  async _loadPDFData(path) {
     //console.log(path);
     const pdfdata = fs.readFileSync(path);
     this.setState({pdfdata: pdfdata}, () => this._renderPDF());
   }
 
   componentWillMount() {
-    this._loadPDFData(this.props.src);
+    if(fs.existsSync(this.props.src)) {
+      this._loadPDFData(this.props.src);
+    }
   }
 
   _renderPDF() {
@@ -141,7 +144,8 @@ export default class PDF extends React.Component {
 
   render() {
     if(this.state.pdfdata === null) {
-      return null;
+      //return <div>[<span>{this.props.src}</span> not found]</div>
+      return <span className={styles.container}><img src="false"/></span>;
     }
 
     return (

@@ -17,7 +17,8 @@
 }
 
 .rightColumn_split {
-  flex: 0 1 auto;
+  /*flex: 0 1 auto;*/
+  /*min-width:40vw;*/
 }
 
 .rightColumn img {
@@ -26,4 +27,19 @@
 
 .editColumn {
   /*flex:1;*/
+  min-width:40rem;
+}
+
+.smartlink {
+
+}
+
+.smartlink span {
+  padding-right:0.2rem;
+}
+
+.smartlink svg {
+  height:0.7rem;
+  display:inline-block;
+  margin-bottom:0.2rem;
 }

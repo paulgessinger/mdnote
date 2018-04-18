@@ -12,6 +12,9 @@ export const ENTRY_SAVE = 'ENTRY_SAVE';
 export const ENTRY_SAVE_PENDING = 'ENTRY_SAVE_PENDING';
 export const ENTRY_SAVE_SUCCESS = 'ENTRY_SAVE_SUCCESS';
 
+export const ENTRY_CREATE_PENDING = 'ENTRY_CREATE_PENDING';
+export const ENTRY_CREATE_SUCCESS = 'ENTRY_CREATE_SUCCESS';
+
 import _ from "lodash";
 import path from 'path';
 
@@ -22,7 +25,8 @@ import {
   readdir,
   readFile,
   write,
-  exists
+  exists,
+  mkdir,
 } from '../utils/fs';
 
 
@@ -152,5 +156,43 @@ export function entrySave(entry) {
     else {
       console.err("file does not exist");
     }
+  };
+}
+
+
+export function entryCreatePending() {
+  return {
+    type: ENTRY_CREATE_PENDING
+  };
+}
+
+export function entryCreateSuccess() {
+  return {
+    type: ENTRY_CREATE_SUCCESS
+  };
+}
+
+export function entryCreate(day) {
+  return async (dispatch) => {
+    const date_str = day.format("YYYY-MM-DD");
+    const fname = date_str + ".md";
+    const entry_path = path.join(DATA_PATH, fname);
+    const asset_path = path.join(DATA_PATH, "assets", date_str);
+    if(await exists(entry_path) || await exists(asset_path)) {
+      // if exists do nothing
+      return;
+    }
+
+
+    dispatch(entryCreatePending());
+
+    await Promise.all([
+      mkdir(asset_path),
+      write(entry_path, "w", `# ${day.format("DD.MM.YYYY")}\n`)
+    ]);
+
+    await dispatch(loadEntries());
+    await dispatch(entryCreateSuccess());
+
   };
 }
