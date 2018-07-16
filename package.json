@@ -201,6 +201,7 @@
     "markdown-it-attrs": "^1.2.1",
     "markdown-it-highlightjs": "^3.0.0",
     "markdown-it-katex": "^2.0.3",
+    "markdown-it-smartarrows": "^1.0.1",
     "markdown-it-task-lists": "^2.1.1",
     "moment": "^2.22.0",
     "pdfjs-dist": "2.0.303",

@@ -27,6 +27,9 @@ export async function uploadFile(file, entry) {
   const file_ext = path.extname(file.path);
   var filename = path.basename(file.path, file_ext);
 
+  // replace spaces with underscores
+  filename = filename.replace(/ /g, "_");
+
   var dest = path.join(asset_dir, filename + file_ext);
   var relative = path.join("assets", entry.date_str, filename+file_ext)
 

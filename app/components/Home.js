@@ -253,17 +253,19 @@ export default class Home extends Component<Props> {
     //dangerouslySetInnerHTML={{__html: this.state.content_html}}>
 
     var html;
-    if(activeEntry && activeEntry.exists) {
+    if(activeEntry) {
+      if(activeEntry.exists) {
       html = ReactHtmlParser(this.state.content_html, {
         transform: (n, i) => this._transform(n, i)
       });
-    }
-    else {
-      //html = "not exists";
-      html = (<div>
-        <h1>{activeEntry.date.format("DD.MM.YYYY")}</h1>
-        <button onClick={() => this.create()}>create</button>
-      </div>);
+      }
+      else {
+        //html = "not exists";
+        html = (<div>
+          <h1>{activeEntry.date.format("DD.MM.YYYY")}</h1>
+          <button onClick={() => this.create()}>create</button>
+        </div>);
+      }
     }
 
     var edit_button;
