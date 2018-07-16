@@ -35,7 +35,8 @@ export default class Home extends Component<Props> {
   constructor(props) {
     super(props);
     this.state = {
-      content_html: ""
+      content_html: "",
+      drag_active: false,
     };
   }
 
@@ -217,6 +218,25 @@ export default class Home extends Component<Props> {
     this.props.entrySave(activeEntry)
   }
 
+
+  _onDragOver(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    this.setState({drag_active: true});
+  }
+
+  _onDragLeave(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    this.setState({drag_active: false});
+  }
+
+  _onDragEnd(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    this.setState({drag_active: false});
+  }
+
   _stopEvent(e) {
     e.preventDefault();
     e.stopPropagation();
@@ -224,10 +244,15 @@ export default class Home extends Component<Props> {
   }
 
   _onChange(value, e) {
-    this.props.activeEntryChanged(value);
 
+    clearTimeout(this._changeTimeout);
     clearTimeout(this._saveTimeout);
-    this._saveTimeout = setTimeout(() => this.props.entrySave(this.props.entries.activeEntry), 1000);
+    this._changedValue = value;
+    this._changeTimeout = setTimeout(() => {
+      this.props.activeEntryChanged(this._changedValue);
+      clearTimeout(this._saveTimeout);
+      this._saveTimeout = setTimeout(() => this.props.entrySave(this.props.entries.activeEntry), 5000);
+    }, 500);
   }
 
   async create() {
@@ -245,6 +270,7 @@ export default class Home extends Component<Props> {
     var activeDay = activeEntry ? activeEntry.date.toDate() : null;
 
     var content = "";
+
 
     //if(activeEntry) {
       //content = await renderMarkdown(activeEntry.content);
@@ -282,11 +308,11 @@ export default class Home extends Component<Props> {
 
 
     return (
-      <div className={styles.container}
+      <div className={cls(styles.container, {[styles.container_drag_active]: this.state.drag_active})}
         onDrop={(e) => this._onDrop(e)}
-        onDragOver={this._stopEvent}
-        onDragLeave={this._stopEvent}
-        onDragEnd={this._stopEvent}
+        onDragOver={e => this._onDragOver(e)}
+        onDragLeave={e => this._onDragLeave(e)}
+        onDragEnd={e => this._onDragEnd(e)}
       >
         <div className={styles.leftColumn}>
           <DayPicker
@@ -297,6 +323,16 @@ export default class Home extends Component<Props> {
           />
           { edit_button }
           { save_button }
+          {activeEntry && activeEntry.exists ?
+            <div>
+              <button onClick={() => {
+                shell.showItemInFolder(activeEntry.path);
+              }}>open folder</button>
+              <button onClick={() => {
+                shell.showItemInFolder(path.join(DATA_PATH, "assets", activeEntry.date.format("YYYY-MM-DD")));
+              }}>open asset folder</button>
+            </div>
+           : null}
         </div>
         <div ref="content" className={cls(styles.rightColumn, {[styles.rightColumn_split] : editor_open})}>
           <div>
@@ -314,6 +350,7 @@ export default class Home extends Component<Props> {
             name="UNIQUE_ID_OF_DIV"
             value={activeEntry.content}
             editorProps={{$blockScrolling: true}}
+            readOnly={!this.props.entrySavePending}
           />
         </div> : null}
       </div>

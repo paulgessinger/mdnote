@@ -11,7 +11,8 @@ type Props = {};
 function mapStateToProps(state) {
   return {
     entries: state.entries,
-    editor_open: state.edit.editor_open
+    editor_open: state.edit.editor_open,
+    entrySavePending: state.entries.entrySavePending,
   };
 }
 
